@@ -14,7 +14,9 @@ module.exports = {
     },
 
     wx: {
-        appId: '',
-        appSecret: ''
+        cal: {
+            appId: '',
+            appSecret: ''
+        }
     }
 };

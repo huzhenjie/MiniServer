@@ -27,7 +27,7 @@ const sequelize = new Sequelize(Config.datasource.mysql.database, Config.datasou
     },
 
     benchmark: true,
-    operatorsAliases: false
+    operatorsAliases: 0
 });
 sequelize.authenticate()
     .then(() => {
@@ -40,6 +40,7 @@ global.Sequelize = Sequelize;
 global.sequelize = sequelize;
 
 index.use('/cal', require('./routes/cal'));
+index.use('/common', require('./routes/common'));
 
 index.listen(Config.port, Config.host, function () {
     console.log(`Visit at http://${Config.host}:${Config.port}`);

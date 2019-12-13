@@ -2,6 +2,7 @@
 const WxHelper = require('../core/wx_helper');
 const CalUser = require('../models/cal_user');
 const CalEvt = require('../models/cal_evt');
+const CalEvtTemplate = require('../models/cal_evt_template');
 const Util = require('../core/util');
 const TokenHelper = require('../core/token_helper');
 module.exports = {
@@ -44,20 +45,86 @@ module.exports = {
     userRegister: function (req, res) {
         const {code, userInfo} = req.body;
         // console.log(req.body);
-        WxHelper.code2Session(Config.wx.appId, Config.wx.appSecret, code, ({session_key, openid}) => {
+        WxHelper.code2Session(Config.wx.cal.appId, Config.wx.cal.appSecret, code, ({session_key, openid}) => {
             // console.log('session_key', session_key);
             // console.log('openid', openid);
             CalUser.findOne({where: {open_id: openid}}).then(function (user) {
                 if (!user) {
                     const uid = Util.randomStr();
+                    const now = new Date().getTime();
                     CalUser.create({
                         uid: uid,
                         open_id: openid,
                         nick: userInfo.nickName,
                         avatar: userInfo.avatarUrl,
                         gender: userInfo.gender,
-                        create_time: new Date().getTime()
+                        create_time: now
                     }).then(row => {
+                        CalEvtTemplate.bulkCreate([
+                            {
+                                uid,
+                                evt_id: 'xiu',
+                                evt_name: '休班',
+                                color: '#ff5722',
+                                description: '今天休息',
+                                score: 0,
+                                create_time: now
+                            },
+                            {
+                                uid,
+                                evt_id: 'zhi',
+                                evt_name: '值班',
+                                color: '#607d8b',
+                                description: '15:30~8:00(次日)',
+                                score: 2,
+                                create_time: now
+                            },
+                            {
+                                uid,
+                                evt_id: 'x',
+                                evt_name: 'X班',
+                                color: '#e91e63',
+                                description: '',
+                                score: 0.5,
+                                create_time: now
+                            },
+                            {
+                                uid,
+                                evt_id: 'a',
+                                evt_name: 'A班',
+                                color: '#ff9800',
+                                description: '7:50～15:30',
+                                score: 1,
+                                create_time: now
+                            },
+                            {
+                                uid,
+                                evt_id: 'wen',
+                                evt_name: '文班',
+                                color: '#8bc34a',
+                                description: '8:00～12:00，14:30～17:30',
+                                score: 0.9,
+                                create_time: now
+                            },
+                            {
+                                uid,
+                                evt_id: 'p',
+                                evt_name: 'P班',
+                                color: '#00bcd4',
+                                description: '7:50~12:00，15:20～22:00',
+                                score: 1.5,
+                                create_time: now
+                            },
+                            {
+                                uid,
+                                evt_id: 'n',
+                                evt_name: 'N班',
+                                color: '#9e9e9e',
+                                description: '22:00~8:00(次日)',
+                                score: 2.5,
+                                create_time: now
+                            }
+                        ]);
                         const token = TokenHelper.createToken({
                             uid,
                             open_id: openid,
@@ -71,7 +138,7 @@ module.exports = {
                                 token,
                                 open_id: openid
                             }
-                        })
+                        });
                     }).catch(err => {
                         const errMsg = '创建用户失败';
                         console.error(errMsg, err);
@@ -97,13 +164,8 @@ module.exports = {
                     })
                 }
             }).catch(err => {
-                const errMsg = '查询用户信息失败';
-                console.error(errMsg, err);
-                res.send({
-                    code: 500,
-                    msg: errMsg
-                })
-            });
+                this.defaultDbError(res, err);
+            })
         }, (err, response, body) => {
             const errMsg = '请求微信服务器失败';
             console.error(errMsg, body);
@@ -114,62 +176,86 @@ module.exports = {
         });
     },
 
-    getTmpList: function (req, res) {
-        res.send({
-            code: 200,
-            msg: 'ok',
-            data: [
-                {
-                    name: '休班',
-                    id: 'xiu',
-                    description: '-',
-                    score: 0,
-                    color: '#ff5722',
-                },
-                {
-                    name: '值班',
-                    id: 'zhi',
-                    description: '15:30~8:00(次日)',
-                    score: 1,
-                    color: '#607d8b'
-                },
-                {
-                    name: 'X班',
-                    id: 'x',
-                    description: '-',
-                    score: 0,
-                    color: '#e91e63'
-                },
-                {
-                    name: 'A班',
-                    id: 'a',
-                    description: '7:50～15:30',
-                    score: 1,
-                    color: '#ff9800'
-                },
-                {
-                    name: '文班',
-                    id: 'xiu',
-                    description: '8:00～12:00，14:30～17:30',
-                    score: 2,
-                    color: '#8bc34a'
-                },
-                {
-                    name: 'P班',
-                    id: 'p',
-                    description: '7:50~12:00，15:20～22:00',
-                    score: 2,
-                    color: '#00bcd4'
-                },
-                {
-                    name: 'N班',
-                    id: 'n',
-                    description: '22:00~8:00(次日)',
-                    score: 3,
-                    color: '#9e9e9e'
-                },
-            ]
+    getUserInfo: function (req, res) {
+        const {uid} = req.headers;
+        CalUser.findOne({
+            where: {
+                uid,
+                delete_time: 0
+            }
+        }).then(function (user) {
+            if (user) {
+                res.send({code: 200, msg: 'ok', data: user})
+            } else {
+                res.send({code: 404, msg: '没有找到相关数据'})
+            }
+        }).catch(err => {
+            this.defaultDbError(res, err);
         })
+    },
+
+    getTmpList: function (req, res) {
+        const {uid} = req.headers;
+        CalEvtTemplate.findAll({
+            where: {
+                uid,
+                delete_time: 0
+            },
+            order: [
+                ['create_time', 'desc']
+            ]
+        }).then(function (evtTmps) {
+            const data = [];
+            for (let tmp of evtTmps) {
+                data.push({
+                    name: tmp.evt_name,
+                    id: tmp.evt_id,
+                    description: tmp.description,
+                    score: tmp.score,
+                    color: tmp.color
+                })
+            }
+            res.send({code: 200, msg: 'ok', data});
+        }).catch(err => {
+            this.defaultDbError(res, err);
+        })
+    },
+
+    getTmp: function (req, res) {
+        const {uid} = req.headers;
+        const {evt_id} = req.params;
+        CalEvtTemplate.findOne({
+            where: {
+                uid,
+                evt_id,
+                delete_time: 0
+            }
+        }).then(function (evtTmp) {
+            if (evtTmp) {
+                res.send({code: 200, msg: 'ok', data: evtTmp})
+            } else {
+                res.send({code: 404, msg: '没有找到相关数据'})
+            }
+        }).catch(err => {
+            this.defaultDbError(res, err);
+        })
+    },
+
+    delTmp: function (req, res) {
+        const {uid} = req.headers;
+        const {evt_id} = req.params;
+        const now = new Date().getTime();
+        CalEvtTemplate.update({
+            update_time: now,
+            delete_time: now,
+        }, {
+            where: {
+                uid,
+                evt_id
+            },
+            limit: 1
+        });
+        res.send({code: 200, msg: 'ok'})
     },
 
     getEvtList: function (req, res) {
@@ -208,12 +294,43 @@ module.exports = {
                 msg: 'ok',
                 data: resArr
             })
+        }).catch(err => {
+            this.defaultDbError(res, err);
+        })
+    },
+
+    getEvt: function (req, res) {
+        const {uid} = req.headers;
+        const {id} = req.params;
+        CalEvt.findOne({
+            where: {
+                id,
+                uid,
+                delete_time: 0
+            }
+        }).then(function (evt) {
+            if (evt) {
+                res.send({code: 200, msg: 'ok', data: evt})
+            } else {
+                res.send({code: 404, msg: '没有找到相关数据'})
+            }
+        }).catch(err => {
+            this.defaultDbError(res, err);
+        })
+    },
+
+    defaultDbError: function (res, err) {
+        const errMsg = '数据库异常';
+        console.error(errMsg, err);
+        res.send({
+            code: 500,
+            msg: errMsg
         })
     },
 
     delEvt: function (req, res) {
         const {uid} = req.headers;
-        const {row_id} = req.params;
+        const {id} = req.params;
         const now = new Date().getTime();
         CalEvt.update({
             update_time: now,
@@ -221,7 +338,7 @@ module.exports = {
         }, {
             where: {
                 uid,
-                id: row_id
+                id
             },
             limit: 1
         });
@@ -243,7 +360,8 @@ module.exports = {
         }).then(row => {
             res.send({
                 code: 200,
-                msg: 'ok'
+                msg: 'ok',
+                data: row
             })
         }).catch(err => {
             const errMsg = '添加事件失败';
@@ -256,21 +374,26 @@ module.exports = {
     },
 
     updateEvt: function (req, res) {
-
-    },
-
-    deleteEvt: function (req, res) {
-
+        const {uid} = req.headers;
+        const {id} = req.params;
+        const {evt_id, evt_name, color, description, score} = req.body;
+        CalEvt.update({
+            evt_id,
+            evt_name,
+            color,
+            description,
+            score,
+            update_time: new Date().getTime()
+        }, {
+            where: {
+                uid,
+                id
+            }
+        });
+        res.send({code: 200, msg: 'ok'})
     },
 
     test: function (req, res) {
-        // const code = '043xqR582RDcoL052D782u1C582xqR52';
-        // WxHelper.code2Session(Config.wx.appId, Config.wx.appSecret, code, ({session_key, openid}) => {
-        //     console.log('session_key', session_key);
-        //     console.log('openid', openid);
-        // }, (err, res, body) => {
-        //     console.error('get session fail ', body)
-        // });
         res.send({
             code: 200,
             msg: 'ok',
