@@ -3,5 +3,9 @@
 To run server, try this:
 
 ```
-node App.js
+node index.js
+```
+
+```
+pm2 start index.js --name 'MiniServer'
 ```

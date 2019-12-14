@@ -241,6 +241,43 @@ module.exports = {
         })
     },
 
+    updateTmp: function (req, res) {
+        const {uid} = req.headers;
+        const {evt_id} = req.params;
+        const {evt_name, score, description, color} = req.body;
+        const update_time = new Date().getTime();
+        CalEvtTemplate.update({
+            evt_name,
+            score,
+            description,
+            update_time,
+            color
+        }, {
+            where: {
+                uid,
+                evt_id
+            },
+            limit: 1
+        });
+        res.send({code: 200, msg: 'ok'});
+    },
+
+    addTmp: function (req, res) {
+        const {uid} = req.headers;
+        const {evt_name, score, description, color} = req.body;
+        const create_time = new Date().getTime();
+        CalEvtTemplate.create({
+            uid,
+            evt_id: Util.randomStr(),
+            evt_name,
+            color,
+            score,
+            description,
+            create_time
+        });
+        res.send({code: 200, msg: 'ok'});
+    },
+
     delTmp: function (req, res) {
         const {uid} = req.headers;
         const {evt_id} = req.params;

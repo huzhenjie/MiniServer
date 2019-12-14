@@ -10,6 +10,8 @@ router.post('/register', CalController.userRegister);
 router.all('/api/*', CalController.userInterceptor);
 router.get('/api/evt/tmp', CalController.getTmpList);
 router.get('/api/evt/tmp/:evt_id', CalController.getTmp);
+router.post('/api/evt/tmp/:evt_id', CalController.updateTmp);
+router.post('/api/evt/tmp', CalController.addTmp);
 router.delete('/api/evt/tmp/:evt_id', CalController.delTmp);
 router.post('/api/evt', CalController.addEvt);
 router.get('/api/evt', CalController.getEvtList);
