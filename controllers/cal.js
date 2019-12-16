@@ -434,7 +434,10 @@ module.exports = {
         CalEvt.findAll(
             {
                 attributes: [
-                    'evt_name', ['floor(dt/100)', 'month'], ['count(1)', 'total_evt'], ['sum(score)', 'total_score']
+                    'evt_name',
+                    ['floor(dt/100)', 'month'],
+                    ['count(1)', 'total_evt'],
+                    ['cast(sum(score) as DECIMAL(19,2))', 'total_score']
                 ],
                 group: ['evt_name', 'month'],
                 where: {
