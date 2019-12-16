@@ -437,7 +437,8 @@ module.exports = {
                     'evt_name',
                     ['floor(dt/100)', 'month'],
                     ['count(1)', 'total_evt'],
-                    ['cast(sum(score) as DECIMAL(19,2))', 'total_score']
+                    // ['cast(sum(score) as DECIMAL(19,2))', 'total_score']
+                    ['sum(score)', 'total_score']
                 ],
                 group: ['evt_name', 'month'],
                 where: {
