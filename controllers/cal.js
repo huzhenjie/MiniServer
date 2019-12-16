@@ -445,12 +445,13 @@ module.exports = {
         ).then(function (overviews) {
             const data = {};
             for (let overview of overviews) {
-                const {month, evt_name, total_evt, total_score} = overview;
+                const {month, evt_name, total_evt, total_score} = overview.dataValues;
                 const monthData = data[month] || {};
                 const evts = monthData.evts || [];
                 evts.push({
                     evt_name, total_evt, total_score
                 });
+                monthData.evts = evts;
                 let totalMonthScore = monthData.total_score || 0;
                 monthData.total_score = totalMonthScore + total_score;
                 data[month] = monthData;
