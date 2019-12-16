@@ -429,6 +429,42 @@ module.exports = {
         });
         res.send({code: 200, msg: 'ok'})
     },
+    getEvtSummary: function (req, res) {
+        const {uid} = req.headers;
+        CalEvt.findAll(
+            {
+                attributes: [
+                    'evt_name', ['floor(dt/100)', 'month'], ['count(1)', 'total_evt'], ['sum(score)', 'total_score']
+                ],
+                group: ['evt_name', 'month'],
+                where: {
+                    uid,
+                    delete_time: 0
+                }
+            }
+        ).then(function (overviews) {
+            const data = {};
+            for (let overview of overviews) {
+                const {month, evt_name, total_evt, total_score} = overview;
+                const monthData = data[month] || {};
+                const evts = monthData.evts || [];
+                evts.push({
+                    evt_name, total_evt, total_score
+                });
+                let totalMonthScore = monthData.total_score || 0;
+                monthData.total_score = totalMonthScore + total_score;
+                data[month] = monthData;
+            }
+            res.send({code: 200, msg: 'ok', data})
+        }).catch(err => {
+            const errMsg = '获取事件统计失败';
+            console.error(errMsg, err);
+            res.send({
+                code: 500,
+                msg: errMsg
+            })
+        })
+    },
 
     test: function (req, res) {
         res.send({
