@@ -2,6 +2,7 @@
 const WxHelper = require('../core/wx_helper');
 const CalUser = require('../models/cal_user');
 const CalEvt = require('../models/cal_evt');
+const CalShare = require('../models/cal_share');
 const CalEvtTemplate = require('../models/cal_evt_template');
 const Util = require('../core/util');
 const TokenHelper = require('../core/token_helper');
@@ -132,7 +133,6 @@ module.exports = {
                         });
                         res.send({
                             code: 200,
-                            msg: 'ok',
                             data: {
                                 uid,
                                 token,
@@ -155,7 +155,6 @@ module.exports = {
                     });
                     res.send({
                         code: 200,
-                        msg: 'ok',
                         data: {
                             uid: user.uid,
                             token,
@@ -185,7 +184,7 @@ module.exports = {
             }
         }).then(function (user) {
             if (user) {
-                res.send({code: 200, msg: 'ok', data: user})
+                res.send({code: 200, data: user})
             } else {
                 res.send({code: 404, msg: '没有找到相关数据'})
             }
@@ -215,7 +214,7 @@ module.exports = {
                     color: tmp.color
                 })
             }
-            res.send({code: 200, msg: 'ok', data});
+            res.send({code: 200, data});
         }).catch(err => {
             this.defaultDbError(res, err);
         })
@@ -232,7 +231,7 @@ module.exports = {
             }
         }).then(function (evtTmp) {
             if (evtTmp) {
-                res.send({code: 200, msg: 'ok', data: evtTmp})
+                res.send({code: 200, data: evtTmp})
             } else {
                 res.send({code: 404, msg: '没有找到相关数据'})
             }
@@ -259,7 +258,7 @@ module.exports = {
             },
             limit: 1
         });
-        res.send({code: 200, msg: 'ok'});
+        res.send({code: 200});
     },
 
     addTmp: function (req, res) {
@@ -275,7 +274,7 @@ module.exports = {
             description,
             create_time
         });
-        res.send({code: 200, msg: 'ok'});
+        res.send({code: 200});
     },
 
     delTmp: function (req, res) {
@@ -292,7 +291,7 @@ module.exports = {
             },
             limit: 1
         });
-        res.send({code: 200, msg: 'ok'})
+        res.send({code: 200})
     },
 
     getEvtList: function (req, res) {
@@ -328,7 +327,6 @@ module.exports = {
             }
             res.send({
                 code: 200,
-                msg: 'ok',
                 data: resArr
             })
         }).catch(err => {
@@ -347,7 +345,7 @@ module.exports = {
             }
         }).then(function (evt) {
             if (evt) {
-                res.send({code: 200, msg: 'ok', data: evt})
+                res.send({code: 200, data: evt})
             } else {
                 res.send({code: 404, msg: '没有找到相关数据'})
             }
@@ -379,7 +377,7 @@ module.exports = {
             },
             limit: 1
         });
-        res.send({code: 200, msg: 'ok'})
+        res.send({code: 200})
     },
 
     addEvt: function (req, res) {
@@ -397,7 +395,6 @@ module.exports = {
         }).then(row => {
             res.send({
                 code: 200,
-                msg: 'ok',
                 data: row
             })
         }).catch(err => {
@@ -427,7 +424,7 @@ module.exports = {
                 id
             }
         });
-        res.send({code: 200, msg: 'ok'})
+        res.send({code: 200})
     },
     getEvtSummary: function (req, res) {
         const {uid} = req.headers;
@@ -460,7 +457,7 @@ module.exports = {
                 monthData.total_score = totalMonthScore + total_score;
                 data[month] = monthData;
             }
-            res.send({code: 200, msg: 'ok', data})
+            res.send({code: 200, data})
         }).catch(err => {
             const errMsg = '获取事件统计失败';
             console.error(errMsg, err);
@@ -468,6 +465,161 @@ module.exports = {
                 code: 500,
                 msg: errMsg
             })
+        })
+    },
+
+    createShareInfo: function (req, res) {
+        const {uid} = req.headers;
+        CalUser.findOne({where: {uid}}).then(function (user) {
+            if (!user) {
+                return res.send({
+                    code: 404,
+                    msg: '创建分享失败'
+                })
+            }
+            res.send({
+                code: 200,
+                data: user.open_id
+            })
+        })
+    },
+
+    applyShare: function (req, res) {
+        const {uid} = req.headers;
+        const {share_code} = req.params;
+        if (!share_code) {
+            return res.send({code: 400, msg: '参数不正确'});
+        }
+        const now = new Date().getTime();
+        CalUser.findOne({where: {open_id: share_code}}).then(function (user) {
+            if (!user) {
+                console.error(`share_code 不存在 ${share_code}`);
+                return res.send({code: 404, msg: '申请失败'});
+            }
+            if (user.uid === uid) {
+                return res.send({code: 403, msg: '不能添加自己'});
+            }
+            CalShare.findOne({
+                where: {
+                    owner_uid: user.uid,
+                    applicant_uid: uid,
+                },
+                limit: 1
+            }).then(function (shareInfo) {
+                if (!shareInfo) {
+                    CalShare.create({
+                        create_time: now,
+                        owner_uid: user.uid,
+                        applicant_uid: uid
+                    });
+                    return res.send({code: 200});
+                }
+                switch (shareInfo.state) {
+                    case 0:
+                    case 1:
+                        return res.send({code: 200});
+                }
+                CalShare.update({
+                    state: 0,
+                    description_auth: 0,
+                    score_auth: 0,
+                    update_time: now
+                }, {
+                    where: {
+                        owner_uid: user.uid,
+                        applicant_uid: uid,
+                    },
+                    limit: 1
+                });
+                return res.send({code: 200});
+            })
+        });
+    },
+
+    updateShareState: function (req, res) {
+        const {uid} = req.headers;
+        const {id} = req.params;
+        const {state, description_auth, score_auth} = req.body;
+        CalShare.update({
+            state,
+            description_auth,
+            score_auth,
+            update_time: new Date().getTime()
+        }, {
+            where: {
+                id,
+                owner_uid: uid,
+            },
+            limit: 1
+        });
+        return res.send({code: 200})
+    },
+
+    getShareList: function (req, res) {
+        const {uid} = req.headers;
+        CalShare.findAll({
+            where: {
+                [Sequelize.Op.or]: [
+                    {applicant_uid: uid},
+                    {owner_uid: uid}
+                ]
+            },
+            order: [
+                ['create_time', 'DESC']
+            ]
+        }).then(shareList => {
+            const myApply = [];
+            const receiver = [];
+            if (shareList.length === 0) {
+                return res.send({
+                    code: 200, data: {
+                        receiver,
+                        my_apply: myApply
+                    }
+                })
+            }
+            const uidSet = new Set();
+            for (let info of shareList) {
+                uidSet.add(info.applicant_uid);
+                uidSet.add(info.owner_uid);
+            }
+            CalUser.findAll({
+                where: {
+                    uid: {
+                        [Sequelize.Op.in]: Array.from(uidSet)
+                    }
+                }
+            }).then(userList => {
+                const userMap = {};
+                for (let user of userList) {
+                    userMap[user.uid] = user;
+                }
+                // console.log(userMap);
+                for (let info of shareList) {
+                    const {id, applicant_uid, owner_uid, state, description_auth, score_auth} = info;
+                    const resInfo = {id, applicant_uid, owner_uid, state, description_auth, score_auth};
+                    const ownerUser = userMap[owner_uid] || {};
+                    resInfo.owner_nick = ownerUser.nick;
+                    resInfo.owner_avatar = ownerUser.avatar;
+                    resInfo.owner_gender = ownerUser.gender;
+                    const applyUser = userMap[applicant_uid] || {};
+                    resInfo.applicant_nick = applyUser.nick;
+                    resInfo.applicant_avatar = applyUser.avatar;
+                    resInfo.applicant_gender = applyUser.gender;
+                    if (owner_uid === uid) {
+                        receiver.push(resInfo);
+                    } else {
+                        myApply.push(resInfo);
+                    }
+                }
+                return res.send({
+                    code: 200, data: {
+                        receiver,
+                        my_apply: myApply
+                    }
+                })
+            });
+
         })
     },
 

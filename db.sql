@@ -57,3 +57,16 @@ content varchar(1024) not null default '' comment '反馈内容',
 create_time bigint unsigned not null default 0 comment '创建时间，13位',
 primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='反馈表';
+
+create table cal_share (
+id int unsigned not null AUTO_INCREMENT comment '自增主键',
+applicant_uid varchar (32) not null default '' comment '申请人uid',
+owner_uid varchar (32) not null default '' comment '日历所有人的uid',
+state tinyint unsigned not null default 0 comment '申请状态：0，申请中；1，申请通过；2，申请被拒绝；3，申请关系已失效',
+description_auth tinyint unsigned not null default 0 comment '是否允许别人查看事件的描述信息，0：不允许，1：允许',
+score_auth tinyint unsigned not null default 0 comment '是否允许别人查看事件的绩效信息，0：不允许，1：允许',
+create_time bigint unsigned not null default 0 comment '创建时间，13位',
+update_time bigint unsigned not null default 0 comment '更新时间，13位',
+unique key (applicant_uid, owner_uid),
+primary key (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='日历分享表';
