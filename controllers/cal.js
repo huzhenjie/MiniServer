@@ -243,7 +243,10 @@ module.exports = {
     updateTmp: function (req, res) {
         const {uid} = req.headers;
         const {evt_id} = req.params;
-        const {evt_name, score, description, color} = req.body;
+        let {evt_name, score, description, color} = req.body;
+        if (!score) {
+            score = 0;
+        }
         const update_time = new Date().getTime();
         CalEvtTemplate.update({
             evt_name,
@@ -410,7 +413,10 @@ module.exports = {
     updateEvt: function (req, res) {
         const {uid} = req.headers;
         const {id} = req.params;
-        const {evt_id, evt_name, color, description, score} = req.body;
+        let {evt_id, evt_name, color, description, score} = req.body;
+        if (!score) {
+            score = 0;
+        }
         CalEvt.update({
             evt_id,
             evt_name,
@@ -625,7 +631,7 @@ module.exports = {
 
     getShareEvt: function (req, res) {
         const {uid} = req.headers;
-        const {share_id, month} = req.params;
+        const {share_id, month} = req.query;
         CalShare.findOne({
             where: {id: share_id, applicant_uid: uid, state: 1}
         }).then(shareInfo => {
