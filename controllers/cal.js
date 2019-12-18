@@ -623,6 +623,57 @@ module.exports = {
         })
     },
 
+    getShareEvt: function (req, res) {
+        const {uid} = req.headers;
+        const {share_id, month} = req.params;
+        CalShare.findOne({
+            where: {id: share_id, applicant_uid: uid, state: 1}
+        }).then(shareInfo => {
+            if (!shareInfo) {
+                return res.send({code: 403, msg: '分享已失效'})
+            }
+            CalEvt.findAll({
+                where: {
+                    dt: {
+                        [Sequelize.Op.between]: [`${month}01`, `${month}31`]
+                    },
+                    uid: shareInfo.owner_uid,
+                    delete_time: 0
+                },
+                order: [
+                    ['dt', 'ASC'],
+                    ['update_time', 'ASC']
+                ]
+            }).then(function (evts) {
+
+                const resArr = {};
+                const descriptionShare = shareInfo.description_auth === 1;
+                const scoreShare = shareInfo.score_auth === 1;
+                for (let evt of evts) {
+                    const events = resArr[evt.dt] || [];
+                    const evtItem = {
+                        name: evt.evt_name,
+                        color: evt.color
+                    };
+                    if (descriptionShare) {
+                        evtItem.description = evt.description;
+                    }
+                    if (scoreShare) {
+                        evtItem.score = evt.score;
+                    }
+                    events.push(evtItem);
+
+                    resArr[evt.dt] = events;
+                }
+                res.send({
+                    code: 200,
+                    data: resArr
+                })
+
+            })
+        })
+    },
+
     test: function (req, res) {
         res.send({
             code: 200,

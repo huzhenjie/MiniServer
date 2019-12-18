@@ -26,6 +26,7 @@ router.post('/api/share/cal', CalController.createShareInfo);
 router.put('/api/share/cal/:share_code', CalController.applyShare);
 router.post('/api/share/cal/:id', CalController.updateShareState);
 router.get('/api/share/cal', CalController.getShareList);
+router.get('/api/share/cal/evt', CalController.getShareEvt);
 
 router.get('/api/user', CalController.getUserInfo);
 
