@@ -7,6 +7,7 @@ const CalController = require('../controllers/cal');
 
 router.all('/test', CalController.test);
 router.post('/register', CalController.userRegister);
+router.get('/today/:dt', CalController.getToday);
 router.all('/api/*', CalController.userInterceptor);
 
 router.get('/api/evt/tmp', CalController.getTmpList);

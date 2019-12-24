@@ -3,6 +3,7 @@ const WxHelper = require('../core/wx_helper');
 const CalUser = require('../models/cal_user');
 const CalEvt = require('../models/cal_evt');
 const CalShare = require('../models/cal_share');
+const CalDay = require('../models/cal_day');
 const CalEvtTemplate = require('../models/cal_evt_template');
 const Util = require('../core/util');
 const TokenHelper = require('../core/token_helper');
@@ -18,8 +19,8 @@ module.exports = {
             })
         }
 
-        const {open_id, create_ts} = TokenHelper.verifyToken(token);
-        if (openid !== open_id) {
+        const tokenData = TokenHelper.verifyToken(token);
+        if (!tokenData || openid !== tokenData.open_id || uid !== tokenData.uid) {
             console.error('接口拦截，openid不正确', token);
             return res.send({
                 code: 4403,
@@ -677,6 +678,44 @@ module.exports = {
                 })
 
             })
+        })
+    },
+
+    getToday: function (req, res) {
+        let {uid, token} = req.headers;
+        if (uid && token) {
+            const tokenData = TokenHelper.verifyToken(token);
+            if (!tokenData || uid !== tokenData.uid) {
+                uid = null;
+            }
+        }
+
+        const {dt} = req.params;
+        CalDay.findOne({
+            where: {
+                dt
+            }
+        }).then(calDay => {
+            if (!calDay) {
+                calDay = null;
+            }
+            if (uid) {
+                CalEvt.findAll({
+                    where: {
+                        dt,
+                        uid,
+                        delete_time: 0,
+                    },
+                    order: [
+                        ['dt', 'ASC'],
+                        ['update_time', 'ASC']
+                    ]
+                }).then(evts => {
+                    return res.send({code: 200, data: {evts, day_info: calDay}})
+                })
+            } else {
+                return res.send({code: 200, data: {day_info: calDay}})
+            }
         })
     },
 
