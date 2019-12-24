@@ -8,6 +8,7 @@ module.exports = sequelize.define('cal_day', {
     },
     dt: Sequelize.INTEGER,
     holiday: Sequelize.STRING,
+    statutory_holidays: Sequelize.TINYINT,
     lunar_cal: Sequelize.STRING,
     quote: Sequelize.STRING,
     author: Sequelize.STRING,

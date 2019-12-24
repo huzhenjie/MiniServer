@@ -75,6 +75,7 @@ create table cal_day (
 id int unsigned not null AUTO_INCREMENT comment '自增主键',
 dt int unsigned not null default 20190101 comment '日期',
 holiday varchar(128) not null default '' comment '节日',
+statutory_holidays tinyint unsigned not null default 0 comment '是否法定假期：0，不是；1，是',
 lunar_cal varchar(16) not null default '' comment '农历',
 quote varchar(256) not null default '' comment '语录',
 author varchar(64) not null default '' comment '语录作者',
