@@ -691,12 +691,13 @@ module.exports = {
         }
 
         const {dt} = req.params;
+        const today = parseInt(new Date().format('yyyyMMdd'));
         CalDay.findOne({
             where: {
                 dt
             }
         }).then(calDay => {
-            if (!calDay) {
+            if (!calDay || dt > today) {
                 calDay = null;
             }
             if (uid) {
