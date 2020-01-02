@@ -83,4 +83,15 @@ create_time bigint unsigned not null default 0 comment '创建时间，13位',
 primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='日历节日表';
 
+create table cal_countdown (
+id int unsigned not null AUTO_INCREMENT comment '自增主键',
+uid varchar (32) not null default '' comment '申请人uid',
+ts bigint unsigned not null default 0 comment '更新时间，13位',
+countdown_name varchar(32) not null default '' comment '倒计时名称',
+create_time bigint unsigned not null default 0 comment '创建时间，13位',
+update_time bigint unsigned not null default 0 comment '更新时间，13位',
+delete_time bigint unsigned not null default 0 comment '删除时间，13位',
+primary key (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='倒计时表';
+
 

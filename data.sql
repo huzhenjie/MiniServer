@@ -1,0 +1,27 @@
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20191226,quote='你怎么过一天，就怎么过一生';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20191227,quote='时光的长河里，故事每天都在发生';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20191228,quote='生活不像电影，生活辛苦多了';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20191229,quote='在幻变的生命里\n岁月，原来是最大的小偷';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20191230,quote='你看太多电影了\n都忘了生活是什么样子';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20191231,quote='如果不出去走走\n你会以为，这，就是全世界';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200101,quote='愿你有个美好的2020年';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200102,quote='优于别人并不高贵\n真正的高贵，是优于过去的自己';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200103,quote='我们能做的\n就是让时间的流逝变得甜美';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200104,quote='电影，就是生活';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200105,quote='美好，或许都是不期而遇的';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200106,quote='只要心中有海，哪里都是马尔代夫';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200107,quote='看清生活的真相后，继续热爱它\n愿你我都能如此';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200108,quote='黑夜不会亏待晚睡的人\n它会赐你一双黑眼圈';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200109,quote='想和你见面的人，春夏秋冬都有空';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200110,quote='何以解忧，唯有暴富';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200111,quote='我害怕时间，一旦它经过\n我就又这样荒废了一天';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200112,quote='老人就像月亮，儿女有空赏赏就好';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200113,quote='人生如逆旅，我亦是行人';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200114,quote='星光不问过路人，时间不负有心人';
+
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200115,quote='你若安好，便是晴天';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200116,quote='人都是逼出来的';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200117,quote='心若没有栖息的地方\n到哪里都是在流浪';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200118,quote='世界上只有想不通的人\n没有走不通的路';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200119,quote='世界太大，但还是遇见了你';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200120,quote='如果你简单，这个世界就对你简单';

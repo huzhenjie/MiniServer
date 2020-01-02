@@ -3,6 +3,7 @@ const WxHelper = require('../core/wx_helper');
 const CalUser = require('../models/cal_user');
 const CalEvt = require('../models/cal_evt');
 const CalShare = require('../models/cal_share');
+const CalCountdown = require('../models/cal_countdown');
 const CalDay = require('../models/cal_day');
 const CalEvtTemplate = require('../models/cal_evt_template');
 const Util = require('../core/util');
@@ -303,10 +304,10 @@ module.exports = {
         const {month} = req.query;
         CalEvt.findAll({
             where: {
+                uid,
                 dt: {
                     [Sequelize.Op.between]: [`${month}01`, `${month}31`]
                 },
-                uid: uid,
                 delete_time: 0
             },
             order: [
@@ -677,7 +678,11 @@ module.exports = {
                     data: resArr
                 })
 
+            }).catch(err => {
+                this.defaultDbError(res, err);
             })
+        }).catch(err => {
+            this.defaultDbError(res, err);
         })
     },
 
@@ -712,12 +717,99 @@ module.exports = {
                         ['update_time', 'ASC']
                     ]
                 }).then(evts => {
-                    return res.send({code: 200, data: {evts, day_info: calDay}})
+                    CalCountdown.findAll({
+                        where: {
+                            uid,
+                            delete_time: 0,
+                        },
+                        order: [
+                            ['ts', 'DESC'],
+                            ['create_time', 'DESC'],
+                        ]
+                    }).then(function (countdowns) {
+                        return res.send({code: 200, data: {evts, day_info: calDay, countdowns}})
+                    });
+                }).catch(err => {
+                    this.defaultDbError(res, err);
                 })
             } else {
                 return res.send({code: 200, data: {day_info: calDay}})
             }
+        }).catch(err => {
+            this.defaultDbError(res, err);
         })
+    },
+
+    getCountdownList (req, res) {
+        const {uid} = req.headers;
+
+        CalCountdown.findAll({
+            where: {
+                uid,
+                delete_time: 0,
+            },
+            order: [
+                ['ts', 'DESC'],
+                ['create_time', 'DESC'],
+            ]
+        }).then(function (countdownList) {
+            res.send({
+                code: 200,
+                data: countdownList
+            })
+        }).catch(err => {
+            this.defaultDbError(res, err);
+        })
+    },
+
+    updateCountdown (req, res) {
+        const {uid} = req.headers;
+        const {id} = req.params;
+        let {countdown_name, ts} = req.body;
+
+        const update_time = new Date().getTime();
+        CalCountdown.update({
+            countdown_name,
+            ts,
+            update_time
+        }, {
+            where: {
+                uid,
+                id
+            },
+            limit: 1
+        });
+        res.send({code: 200});
+    },
+
+    addCountdown (req, res) {
+        const {uid} = req.headers;
+        const {countdown_name, ts} = req.body;
+        const create_time = new Date().getTime();
+        CalCountdown.create({
+            uid,
+            create_time,
+            countdown_name,
+            ts
+        });
+        res.send({code: 200});
+    },
+
+    delCountdown (req, res) {
+        const {uid} = req.headers;
+        const {id} = req.params;
+        const now = new Date().getTime();
+        CalCountdown.update({
+            update_time: now,
+            delete_time: now
+        }, {
+            where: {
+                uid,
+                id
+            },
+            limit: 1
+        });
+        res.send({code: 200});
     },
 
     test: function (req, res) {

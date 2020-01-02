@@ -29,6 +29,11 @@ router.post('/api/share/cal/:id', CalController.updateShareState);
 router.get('/api/share/cal', CalController.getShareList);
 router.get('/api/share/cal/evt', CalController.getShareEvt);
 
+router.get('/api/countdown', CalController.getCountdownList);
+router.post('/api/countdown', CalController.addCountdown);
+router.post('/api/countdown/:id', CalController.updateCountdown);
+router.delete('/api/countdown/:id', CalController.delCountdown);
+
 router.get('/api/user', CalController.getUserInfo);
 
 module.exports = router;
