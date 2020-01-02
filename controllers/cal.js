@@ -740,7 +740,7 @@ module.exports = {
         })
     },
 
-    getCountdownList (req, res) {
+    getCountdownList(req, res) {
         const {uid} = req.headers;
 
         CalCountdown.findAll({
@@ -762,7 +762,27 @@ module.exports = {
         })
     },
 
-    updateCountdown (req, res) {
+    getCountdown(req, res) {
+        const {uid} = req.headers;
+        const {id} = req.params;
+
+        CalCountdown.findOne({
+            where: {
+                id,
+                uid,
+                delete_time: 0
+            }
+        }).then(countdown => {
+            if (!countdown) {
+                return res.send({code: 404, msg: '没有找到相关信息'});
+            }
+            res.send({code: 200, data: countdown});
+        }).catch(err => {
+            this.defaultDbError(res, err);
+        })
+    },
+
+    updateCountdown(req, res) {
         const {uid} = req.headers;
         const {id} = req.params;
         let {countdown_name, ts} = req.body;
@@ -782,7 +802,7 @@ module.exports = {
         res.send({code: 200});
     },
 
-    addCountdown (req, res) {
+    addCountdown(req, res) {
         const {uid} = req.headers;
         const {countdown_name, ts} = req.body;
         const create_time = new Date().getTime();
@@ -795,7 +815,7 @@ module.exports = {
         res.send({code: 200});
     },
 
-    delCountdown (req, res) {
+    delCountdown(req, res) {
         const {uid} = req.headers;
         const {id} = req.params;
         const now = new Date().getTime();
