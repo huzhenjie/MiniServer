@@ -452,9 +452,8 @@ module.exports = {
                 }
             }
         ).then(function (overviews) {
-            const overviewData = overviews.reverse();
             const data = {};
-            for (let overview of overviewData) {
+            for (let overview of overviews) {
                 const {month, evt_name, total_evt, total_score} = overview.dataValues;
                 const monthData = data[month] || {};
                 const evts = monthData.evts || [];
