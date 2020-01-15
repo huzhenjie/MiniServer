@@ -449,7 +449,10 @@ module.exports = {
                 where: {
                     uid,
                     delete_time: 0
-                }
+                },
+                order: [
+                    ['month', 'DESC']
+                ]
             }
         ).then(function (overviews) {
             const data = {};
