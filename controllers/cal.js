@@ -449,14 +449,12 @@ module.exports = {
                 where: {
                     uid,
                     delete_time: 0
-                },
-                order: [
-                    ['month', 'DESC']
-                ]
+                }
             }
         ).then(function (overviews) {
+            const overviewData = overviews.reverse();
             const data = {};
-            for (let overview of overviews) {
+            for (let overview of overviewData) {
                 const {month, evt_name, total_evt, total_score} = overview.dataValues;
                 const monthData = data[month] || {};
                 const evts = monthData.evts || [];
