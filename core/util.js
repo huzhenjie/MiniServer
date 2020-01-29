@@ -13,5 +13,16 @@ module.exports = {
         let result = '';
         for (let i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
         return result;
+    },
+    defaultDbError: function (res, err) {
+        const errMsg = '数据库异常';
+        console.error(errMsg, err);
+        res.send({
+            code: 500,
+            msg: errMsg
+        });
+    },
+    defaultRes: function (res) {
+        res.send({code: 200});
     }
 };
