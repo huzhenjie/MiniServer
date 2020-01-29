@@ -17,6 +17,10 @@ module.exports = {
         cal: {
             appId: '',
             appSecret: ''
+        },
+        zu: {
+            appId: '',
+            appSecret: ''
         }
     }
 };
