@@ -61,6 +61,7 @@ Date.prototype.format = function (fmt) { // yyyy/M/d h:mm:ss
 };
 
 index.use('/cal', require('./routes/cal'));
+index.use('/influenza', require('./routes/influenza'));
 index.use('/common', require('./routes/common'));
 
 index.listen(Config.port, Config.host, function () {

@@ -94,4 +94,34 @@ delete_time bigint unsigned not null default 0 comment '删除时间，13位',
 primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='倒计时表';
 
+create table influenza_news (
+id int unsigned not null AUTO_INCREMENT comment '自增主键',
+title varchar(64) not null default '' comment '标题',
+summary varchar(128) not null default '' comment '简述',
+url varchar(256) not null default '' comment '链接',
+source_info varchar(64) not null default '' comment '来源',
+news_time bigint unsigned not null default 0 comment '新闻时间，13位',
+create_time bigint unsigned not null default 0 comment '创建时间，13位',
+update_time bigint unsigned not null default 0 comment '更新时间，13位',
+delete_time bigint unsigned not null default 0 comment '删除时间，13位',
+primary key (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='流感新闻表';
 
+insert ignore into influenza_news set title='this is title',summary='this is sumary',url='this is url',source_info='this is source_info', news_time=unix_timestamp(now())*1000,create_time=unix_timestamp(now())*1000;
+
+create table influenza_overview (
+id int unsigned not null AUTO_INCREMENT comment '自增主键',
+country varchar (32) not null default '' comment '国家',
+province varchar(32) not null default '' comment '省',
+city varchar(32) not null default '' comment '市',
+confirmed int unsigned not null default 0 comment '确诊人数',
+death int unsigned not null default 0 comment '死亡人数',
+cure int unsigned not null default 0 comment '治愈人数',
+suspected int unsigned not null default 0 comment '疑似人数',
+create_time bigint unsigned not null default 0 comment '创建时间，13位',
+update_time bigint unsigned not null default 0 comment '更新时间，13位',
+delete_time bigint unsigned not null default 0 comment '删除时间，13位',
+primary key (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='流感概览表';
+
+insert ignore into influenza_overview set country='中国',province='湖北',city='武汉',confirmed=618,death=45,cure=40,create_time=unix_timestamp(now())*1000;
