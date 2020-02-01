@@ -3,7 +3,7 @@
 const express = require('express');
 const router = express.Router();
 
-const InfluenzaController = require('../controllers/influenza');
+const InfluenzaController = require('../controller/influenza');
 
 router.get('/news', InfluenzaController.getNews);
 router.get('/overview', InfluenzaController.getOverview);

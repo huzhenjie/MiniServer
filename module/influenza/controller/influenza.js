@@ -1,8 +1,8 @@
 'use strict';
 // const Util = require('../core/util');
 // const TokenHelper = require('../core/token_helper');
-const InfluenzaNews = require('../models/influenza_news');
-const InfluenzaOverview = require('../models/influenza_overview');
+const InfluenzaNews = require('../model/influenza_news');
+const InfluenzaOverview = require('../model/influenza_overview');
 
 function getNewsData(res, id, index, size) {
     let idParam;
