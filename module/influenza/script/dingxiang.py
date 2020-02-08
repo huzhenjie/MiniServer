@@ -3,6 +3,10 @@ import os
 import sys
 import time
 import json
+import sys  
+  
+reload(sys)  
+sys.setdefaultencoding('utf8')
 
 CACHE_MAP_DATA_PATH = '/usr/share/nginx/html/s/influenza/influenza_data.json'
 
@@ -94,7 +98,7 @@ def parse_overview(origin_html):
 					'dead': deadCount
 					})
 				print u'%s %s 确认：%s 疑似：%s 治愈：%s 死亡：%s' % (province, cityName, confirmedCount, suspectedCount, curedCount, deadCount)
-		provice_data = {
+		province_data = {
 			'province': province,
 			'confirmed': provinceConfirmedCount,
 			'suspected': provinceSuspectedCount,
@@ -102,7 +106,7 @@ def parse_overview(origin_html):
 			'dead': provinceDeadCount,
 			'cities': city_data
 		}
-		overview.append(provice_data)
+		overview.append(province_data)
 	cache_data = {
 		'map': map_data,
 		'overview': overview
