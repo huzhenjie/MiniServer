@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no">
+    <title>实时疫情</title>
+    <style>
+        table {
+            margin: auto;
+        }
+        .province {
+            font-weight: bold;
+            color: #b71c1c;
+            font-size: larger;
+            margin-top: 5vw;
+        }
+
+        td {
+            min-width: 15vw;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<script src="jquery-3.1.1.min.js"></script>
+<script src="highmaps.js"></script>
+
+<div id="container"></div>
+
+<div>
+    <table rules=rows>
+        <thead>
+        <tr>
+            <th>地区</th>
+            <th>确诊</th>
+            <th>死亡</th>
+            <th>治愈</th>
+        </tr>
+        </thead>
+        <tbody id="table"></tbody>
+    </table>
+</div>
+</body>
+<script>
+
+    var mapKey = 'countries/cn/custom/cn-all-sar-taiwan';
+
+    if (Highcharts.charts[0]) {
+        Highcharts.charts[0].showLoading('<i class="fa fa-spinner fa-spin fa-2x"></i>');
+    }
+
+    function mapReady(data = []) {
+
+        var mapGeoJSON = Highcharts.maps[mapKey];
+
+        // $.each(mapGeoJSON.features, function (index, feature) {
+        //     console.log(index, feature.properties['hc-key']);
+        //     data.push({
+        //         key: feature.properties['hc-key'],
+        //         value: index
+        //     });
+        // });
+
+        $("#container").highcharts('Map', {
+
+            title: {
+                text: null
+            },
+
+            mapNavigation: {
+                enabled: true
+            },
+
+            colorAxis: {
+                min: 0,
+                stops: [
+                    [0, '#EFEFFF'],
+                    [0.5, Highcharts.getOptions().colors[0]],
+                    [1, Highcharts.color(Highcharts.getOptions().colors[0]).brighten(-0.5).get()]
+                ]
+            },
+
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                verticalAlign: 'bottom'
+            },
+
+            series: [{
+                data: data,
+                mapData: mapGeoJSON,
+                joinBy: ['hc-key', 'key'],
+                name: '肺炎确诊病例',
+                states: {
+                    hover: {
+                        color: Highcharts.getOptions().colors[2]
+                    }
+                },
+                dataLabels: {
+                    enabled: false,
+                    formatter: function () {
+                        return mapKey === 'custom/world' || mapKey === 'countries/us/us-all' ?
+                            (this.point.properties && this.point.properties['hc-a2']) :
+                            this.point.name;
+                    }
+                },
+                point: {
+                    events: {
+                        click: function () {
+                            var key = this.key;
+                            $('#mapDropdown option').each(function () {
+                                if (this.value === 'countries/' + key.substr(0, 2) + '/' + key + '-all.js') {
+                                    $('#mapDropdown').val(this.value).change();
+                                }
+                            });
+                        }
+                    }
+                }
+            }, {
+                type: 'mapline',
+                name: "Separators",
+                data: Highcharts.geojson(mapGeoJSON, 'mapline'),
+                nullColor: 'gray',
+                showInLegend: false,
+                enableMouseTracking: false
+            }]
+        });
+    }
+
+    function showTable(datas) {
+        var html = '';
+        $.each(datas, function (index, province) {
+            console.log(province);
+            html += '<tr class="province"><td>' + province.province + '</td><td>' + province.confirmed + '</td><td>' + province.dead + '</td><td>' + province.cured + '</td></tr>';
+            $.each(province.cities, function (i, city) {
+                html += '<tr><td>' + city.city + '</td><td>' + city.confirmed + '</td><td>' + city.dead + '</td><td>' + city.cured + '</td></tr>';
+            })
+        });
+
+        $('#table').html(html);
+    }
+
+    $.getScript('./map_data.js', function () {
+        $.get('./influenza_data.json', function (data) {
+            mapReady(data.map);
+            showTable(data.overview);
+        });
+    });
+    // $.get(javascriptPath, function (datas) {
+    //     console.log(datas);
+    //     // $.each(influenzaDatas, function (index, data) {
+    //     //     console.log(index, data);
+    //     // });
+    // })
+
+</script>
+</html>
