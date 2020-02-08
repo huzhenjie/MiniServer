@@ -60,6 +60,7 @@ Date.prototype.format = function (fmt) { // yyyy/M/d h:mm:ss
     return fmt
 };
 
+index.use('/test', require('./module/test/route'));
 index.use('/cal', require('./routes/cal'));
 index.use('/influenza', require('./module/influenza/route/influenza'));
 index.use('/common', require('./routes/common'));
