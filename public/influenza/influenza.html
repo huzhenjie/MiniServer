@@ -130,7 +130,7 @@
     function showTable(datas) {
         var html = '';
         $.each(datas, function (index, province) {
-            console.log(province);
+            // console.log(province);
             html += '<tr class="province"><td>' + province.province + '</td><td>' + province.confirmed + '</td><td>' + province.dead + '</td><td>' + province.cured + '</td></tr>';
             $.each(province.cities, function (i, city) {
                 html += '<tr><td>' + city.city + '</td><td>' + city.confirmed + '</td><td>' + city.dead + '</td><td>' + city.cured + '</td></tr>';
