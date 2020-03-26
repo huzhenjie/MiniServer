@@ -64,6 +64,7 @@ index.use('/test', require('./module/test/route'));
 index.use('/cal', require('./routes/cal'));
 index.use('/influenza', require('./module/influenza/route/influenza'));
 index.use('/common', require('./routes/common'));
+index.use('/pwd', require('./module/pwd/route/pwd'));
 
 index.listen(Config.port, Config.host, function () {
     console.log(`Visit at http://${Config.host}:${Config.port}`);

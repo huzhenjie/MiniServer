@@ -62,3 +62,32 @@ insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=2020022
 insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200225,quote='好听的话别当真，难听的话别较真';
 insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200226,quote='唯有美食与爱不可辜负';
 insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200227,quote='一沈秋园，满庭霜落\n云烟北桥夜连城';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200228,quote='武汉，加油！';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200229,quote='时间证明，健康地活着最重要';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200301,quote='和有趣的人，浪费人生';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200302,quote='真正热爱生活的人\n不会被生活打败';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200303,quote='众志成城，抗击疫情';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200304,quote='带不走的留不下，留不下的莫牵挂';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200305,quote='我们听过无数的道理\n却仍旧过不好这一生';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200306,quote='小孩子才分对错，成年人只看利弊';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200307,quote='女生节快乐';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200308,quote='女神节快乐';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200309,quote='有些人为了自由，有些人为了生活';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200310,quote='要先学会分辨，然后再去信任';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200311,quote='多做一些事情，不枉此生来过';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200312,quote='喜欢就会放肆，但爱就是克制';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200313,quote='成熟\n其实就是人开始学会了与孤独相处';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200314,quote='青山一道同云雨，明月何曾是两乡';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200315,quote='山川异域，风月同天';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200316,quote='岂曰无衣，与子同裳';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200317,quote='靠运气赚来的钱，凭实力亏出去';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200318,quote='三分天注定，七分靠打拼';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200319,quote='阳光总在风雨后，乌云上有睛空';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200320,quote='在有生的瞬间能遇到你\n竟花光所有运气';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200321,quote='所有的失败，都是上天在考验你\n是否真的热爱';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200322,quote='我的眼睛很大，容得下海阔天空';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200323,quote='我的眼睛很小，容不下一汪热泪';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200324,quote='好好生活，慢慢相遇';
+insert ignore into cal_day set create_time=unix_timestamp(now())*1000,dt=20200325,quote='珍贵的东西，总要付出许多艰辛\n才会显得珍贵';
+
+

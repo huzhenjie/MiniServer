@@ -124,4 +124,31 @@ delete_time bigint unsigned not null default 0 comment '删除时间，13位',
 primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='流感概览表';
 
-insert ignore into influenza_overview set country='中国',province='湖北',city='武汉',confirmed=618,death=45,cure=40,create_time=unix_timestamp(now())*1000;
+create table pwd_user (
+id int unsigned not null AUTO_INCREMENT comment '自增主键',
+uid char(32) not null default '' comment '用户ID',
+username varchar(64) not null default '' comment '用户名',
+pwd char(32) not null default '' comment '密码',
+salt char(32) not null default '' comment 'salt',
+create_time bigint unsigned not null default 0 comment '创建时间，13位',
+update_time bigint unsigned not null default 0 comment '更新时间，13位',
+delete_time bigint unsigned not null default 0 comment '删除时间，13位',
+unique key (uid),
+unique key (username),
+primary key (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='密码用户表';
+
+create table pwd_token (
+id int unsigned not null AUTO_INCREMENT comment '自增主键',
+uid char(32) not null default '' comment '用户ID',
+tp enum('app', 'h5') not null default 'app' comment '令牌类型',
+access_token char(32) not null default '' comment '访问令牌',
+refresh_token char(32) not null default '' comment '刷新令牌',
+create_time bigint unsigned not null default 0 comment '创建时间，13位',
+update_time bigint unsigned not null default 0 comment '更新时间，13位',
+delete_time bigint unsigned not null default 0 comment '删除时间，13位',
+access_expire_time bigint unsigned not null default 0 comment 'access_token过期时间，13位',
+refresh_expire_time bigint unsigned not null default 0 comment 'refresh_token过期时间，13位',
+index (uid),
+primary key (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='登录令牌表';

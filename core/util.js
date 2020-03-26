@@ -1,4 +1,5 @@
 'use strict';
+const Crypto = require('crypto');
 
 module.exports = {
     randomStr: function (length, chars) {
@@ -14,8 +15,8 @@ module.exports = {
         for (let i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
         return result;
     },
-    defaultDbError: function (res, err) {
-        const errMsg = '数据库异常';
+    defaultDbError: function (res, err, msg) {
+        const errMsg = msg || '数据库异常';
         console.error(errMsg, err);
         res.send({
             code: 500,
@@ -24,5 +25,8 @@ module.exports = {
     },
     defaultRes: function (res) {
         res.send({code: 200});
+    },
+    md5: function (origin_str) {
+        return Crypto.createHash('md5').update(origin_str).digest('hex');
     }
 };

@@ -17,6 +17,15 @@ module.exports = {
         cal: {
             appId: '',
             appSecret: ''
+        },
+
+        zu: {
+            appId: '',
+            appSecret: ''
         }
+    },
+
+    pwd: {
+        sign_key: ''
     }
 };
