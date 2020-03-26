@@ -141,7 +141,8 @@
     }
 
     $.getScript('./map_data.js', function () {
-        $.get('./influenza_data.json', function (data) {
+        var t = new Date().getTime();
+        $.get('./influenza_data.json?t=' + t, function (data) {
             mapReady(data.map);
             showTable(data.overview);
         });
