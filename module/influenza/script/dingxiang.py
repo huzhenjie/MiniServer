@@ -114,7 +114,8 @@ def parse_overview(origin_html):
 	write_cache_file(CACHE_MAP_DATA_PATH, cache_data)
 
 def main():
-	cmd = "curl -L 'https://3g.dxy.cn/newh5/view/pneumonia?scene=2&clicktime=1579578460&enterid=1579578460&from=groupmessage&isappinstalled=0'"
+	t = int(time.time())
+	cmd = "curl -L 'https://3g.dxy.cn/newh5/view/pneumonia?scene=2&clicktime=%s&enterid=%s&from=groupmessage&isappinstalled=0'" % (t, t)
 	origin_html = cmd_to_str(cmd, '')
 	parse_overview(origin_html)
 
